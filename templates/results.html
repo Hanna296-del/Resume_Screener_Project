@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Match Results - AI Resume Screener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .file-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .score-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .score-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 200px;
+            margin: 10px;
+        }
+        .overall {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .skills {
+            background: #48bb78;
+            color: white;
+        }
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .skills-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .skill-tag {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .skill-matched {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #48bb78;
+        }
+        .skill-missing {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #f56565;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #764ba2;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Resume Match Results</h1>
+        
+        <div class="file-info">
+            <strong>Resume:</strong> {{ filename }}
+        </div>
+        
+        <div class="score-container">
+            <div class="score-card overall">
+                <div>Overall Match</div>
+                <div class="score-number">{{ result.overall_match }}%</div>
+            </div>
+            <div class="score-card skills">
+                <div>Skills Match</div>
+                <div class="score-number">{{ result.skills_match }}%</div>
+            </div>
+        </div>
+        
+        <div class="skills-section">
+            <h2>✅ Matched Skills ({{ result.common_skills|length }})</h2>
+            <div class="skills-list">
+                {% for skill in result.common_skills %}
+                <span class="skill-tag skill-matched">{{ skill }}</span>
+                {% else %}
+                <p>No matching skills found</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="skills-section">
+            <h2>⚠️ Missing Skills ({{ result.missing_skills|length }})</h2>
+            <div class="skills-list">
+                {% for skill in result.missing_skills %}
+                <span class="skill-tag skill-missing">{{ skill }}</span>
+                {% else %}
+                <p>Great! No missing skills!</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="skills-section">
+            <h2>📝 Skills Found in Resume</h2>
+            <div class="skills-list">
+                {% for skill in result.resume_skills %}
+                <span class="skill-tag skill-matched">{{ skill }}</span>
+                {% else %}
+                <p>No skills detected in resume</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="skills-section">
+            <h2>🎯 Skills Required in Job</h2>
+            <div class="skills-list">
+                {% for skill in result.job_skills %}
+                <span class="skill-tag skill-matched">{{ skill }}</span>
+                {% else %}
+                <p>No skills detected in job description</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <a href="/screener" class="btn">Analyze Another Resume →</a>
+        </div>
+    </div>
+</body>
+</html>
